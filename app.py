@@ -14,17 +14,25 @@ def convert_audio_to_wav(input_file, output_file):
     audio.export(output_file, format="wav")
     return output_file
 
-def transcribe_audio(file_path, language="fa"):
+def transcribe_audio(file_path, language="fa", model_name="small"):
     """
     Transcribes Persian audio to text using Whisper.
     """
-    model = whisper.load_model("small")  # 'base' for faster, 'medium' or 'large' for better accuracy.
+    model = whisper.load_model(model_name)  # 'base' for faster, 'medium' or 'large' for better accuracy.
     result = model.transcribe(file_path, language=language)
     return result["text"]
 
 def main():
     st.title("Persian Voice-to-Text Transcription")
     st.write("Upload a WAV file, and this app will transcribe it into Persian text.")
+    
+    # Dropdown for model selection
+    model_choice = st.selectbox(
+        "Choose Whisper Model",
+        ["base", "small", "medium", "large"],
+        index=1,  # Default to "small"
+    )
+    st.write(f"Using Whisper model: {model_choice}")
     
     # File uploader restricted to WAV files
     uploaded_file = st.file_uploader("Upload your audio file (WAV only)", type=["wav"])
@@ -39,7 +47,7 @@ def main():
                     f.write(uploaded_file.getbuffer())
                 
                 # Transcribe the WAV audio directly
-                transcription = transcribe_audio(input_path, language="fa")
+                transcription = transcribe_audio(input_path, language="fa", model_name=model_choice)
                 
                 st.success("Transcription Complete!")
                 st.text_area("Transcribed Text (Persian)", transcription, height=300)
