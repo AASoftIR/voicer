@@ -18,7 +18,7 @@ def transcribe_audio(file_path, language="fa"):
     """
     Transcribes Persian audio to text using Whisper.
     """
-    model = whisper.load_model("large")  # 'base' for faster, 'medium' or 'large' for better accuracy.
+    model = whisper.load_model("small")  # 'base' for faster, 'medium' or 'large' for better accuracy.
     result = model.transcribe(file_path, language=language)
     return result["text"]
 
